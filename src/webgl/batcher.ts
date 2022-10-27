@@ -9,7 +9,7 @@ import { Graphics } from './graphics'
 
 export class Batcher {
 
-  nb = 24000
+  nb = 96000
   _els: Array<any> = []
   _indexBuffer = new Uint16Array(this.nb * 3)
   _attributeBuffer = new Float32Array(this.nb * 9)

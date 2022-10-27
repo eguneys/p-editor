@@ -1,5 +1,9 @@
-export const w = 1080
-export const h = 1920
+import { Vec2 } from './vec2'
+
+export const w = 1920
+export const h = 1080
+
+export const v_screen = Vec2.make(w, h)
 
 const rate = 1000 / 60
 export const ticks = {

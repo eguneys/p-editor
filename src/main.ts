@@ -2,6 +2,7 @@ import { w, h } from './shared'
 import sprites_png from '../assets/sprites.png'
 import { Camera, Canvas, Graphics, Batcher } from './webgl'
 import { Vec3 } from './webgl/math4'
+import { loop } from './debug'
 import App from './editor'
 
 
@@ -37,24 +38,6 @@ function load_image(path: string): Promise<HTMLImageElement> {
     res.onload = () => resolve(res)
     res.src = path
   })
-}
-
-
-export const loop = (_fn: (dt: number) => void) => {
-  let _cancel: number
-  let _last_now = 0
-
-  function step(_now: number) {
-    let dt = _now - (_last_now || _now)
-    _last_now = _now
-    dt = Math.max(Math.min(dt, 16), 4)
-    _fn(dt)
-    _cancel = requestAnimationFrame(step)
-  }
-  _cancel = requestAnimationFrame(step)
-  return () => {
-    cancelAnimationFrame(_cancel)
-  }
 }
 
 Promise.all([

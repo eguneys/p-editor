@@ -37,9 +37,9 @@ export class Graphics {
     gl.clearColor(r, g, b, 1)
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthFunc(gl.LEQUAL)
-    //gl.enable(gl.CULL_FACE)
+    //gl.enable(gl.DEPTH_TEST)
+    //gl.depthFunc(gl.LEQUAL)
+    gl.enable(gl.CULL_FACE)
   }
 
   glProgram = (vSource: string, fSource: string, nb: number) => {

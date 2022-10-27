@@ -1,5 +1,6 @@
 import { Camera, Batcher } from './webgl'
 import { Vec2, Rectangle } from './vec2'
+import { Ref, onScrollHandlers } from './ref'
 
 let v_off = Vec2.make(540, 740).sub(Vec2.make(500, 500))
 
@@ -13,8 +14,6 @@ const make_random = (seed = 1) => {
                 }
 }
 const random = make_random()
-
-let v_screen = Vec2.make(1080, 1920)
 
 function rnd_angle(rng: RNG = random) {
     return rng() * Math.PI * 2
@@ -138,14 +137,27 @@ abstract class PlayMakes extends Play {
     this.makes.push([Ctor, data, delay, repeat, 0, 0])
   }
 
+
+  gtexture(x: number, y: number, w: number, h: number, sx: number, sy: number, sw: number, sh: number, r: number = 0) {
+    this.g.texture(0xcccccc, 0, 0, r, x, y, 0, w, h, sx, sy, sw, sh, 1028, 1028)
+  }
+
+
   z!: number
   objects!: Array<PlayMakes>
   makes!: Array<MakeCtor>
+  ref!: Ref
 
   init() {
     this.objects = []
     this.makes = []
-    this.z = 0
+
+    this.ref = Ref.make(this.$element)
+
+    onScrollHandlers(() => {
+      this.ref.$clear_bounds()
+    })
+
     return super.init()
   }
 
