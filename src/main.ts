@@ -1,12 +1,32 @@
-import { App, DrawCall } from 'blah'
+import { App } from 'blah'
+import Game from './game'
 
-new DrawCall().perform()
 const app = (element: HTMLElement) => {
-  console.log(element)
+
+  let game = new Game()
+
+  App.run({
+    name: 'p-editor',
+    width: 1920,
+    height: 1080,
+    on_startup() {
+      game.init()
+    },
+    on_update() {
+      game.update()
+    },
+    on_render() {
+      game.render()
+    }
+  })
+
+  if (App.canvas) {
+    element.appendChild(App.canvas)
+  }
 }
 
 
-app(document.getElementById('app'))
+app(document.getElementById('app')!)
 
 
 export default app
