@@ -10,9 +10,9 @@ This is a walkthrough of his process in Typescript and WebGL. It uses the rewrit
 
 There is also a [walkthrough of PICO-8 version of Celeste](https://github.com/eguneys/celeste-jumping) written previously.
 
-Currently Noel streams about his side project that is Megaman inspired metroidvania. It features 2D Platforming with slopes, handles collisions with Separating Axis Theorem, smooth room transitions like in Celeste, a level editor, and enemy behaviour described using coroutines. These will be the topic of our next post.
+Currently Noel streams about his side project that is Megaman inspired metroidvania. It features 2D Platforming with slopes, handles collisions with Separating Axis Theorem, smooth room transitions like in Celeste, an awesome level editor, and enemy behaviour described using coroutines. These will be the topic of our next post.
 
-Finally the internals of the rewrite of "blah" game framework in Typescript will also be discussed last.
+Finally the internals of the rewrite of "blah" game framework in Typescript will also be discussed in a later post.
 
 
 See [SETUP.md](SETUP.md) for how to setup the Typescript project and install the "blah in Typescript" dependency.
@@ -186,5 +186,7 @@ import { Target } from 'blah'
 ```
 
 Instead of rendering directly to `App.backbuffer` (which represents the screen), we will render the game into `this.buffer`, which is another `Target` with 320x180 size. Finally we will render the output texture of `this.buffer` (received via `this.buffer.texture(0)`) into our `App.backbuffer` scaled to fill it's size and positioned on the center.
+
+Finally we set the `batch.default_sampler` to use `Nearest` filtering mode to achieve pixelated look.
 
 
