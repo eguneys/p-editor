@@ -4,13 +4,13 @@ Noel Berry, creator of Celeste, has made a Zelda inspired platformer game on his
 
 He used a C++ game framework called [blah](https://github.com/NoelFB/blah) that he wrote himself in about 6 months. It supports both OpenGL and DirectX, and works on Windows or SDL supported platforms.
 
-The game uses a simple Entity Component architecture, a grid based map and colliders, and content like tilesets and animations loaded directly from Aseprite files. 
+The game uses a simple Entity Component architecture, a grid based map and colliders, and content like tilesets and animations loaded directly from Aseprite files. The "blah" framework uses sprite batching to draw textures, and methods to render primitive graphics for debugging purposes. Finally it has helpful vector and matrix classes to help with the math.
 
 This is a walkthrough of his process in Typescript and WebGL. It uses the rewrite of the [blah framework in Typescript](https://github.com/eguneys/blah).
 
 There is also a [walkthrough of PICO-8 version of Celeste](https://github.com/eguneys/celeste-jumping) written previously.
 
-Currently Noel streams about his side project that is Megaman inspired metroidvania. It features 2D Platforming with slopes, handles collisions with Separating Axis Theorem, a level editor, and enemy behaviour described using coroutines. These will be the topic of our next post.
+Currently Noel streams about his side project that is Megaman inspired metroidvania. It features 2D Platforming with slopes, handles collisions with Separating Axis Theorem, smooth room transitions like in Celeste, a level editor, and enemy behaviour described using coroutines. These will be the topic of our next post.
 
 Finally the internals of the rewrite of "blah" game framework in Typescript will also be discussed last.
 
@@ -55,4 +55,73 @@ app(document.getElementById('app')!)
 We will implement the `Game` object next but here, we import `App` from `'blah'` and call `App.run` method with our config that specifies the canvas size, and a bunch of callbacks.
 
 This creates a canvas, and stores the `webgl2` context for drawing, also creates a game loop using `requestAnimationFrame`. So `on_startup` get's called once on startup, `on_update` is called on each frame (possibly multiple times), and `on_render` is called on each frame last.
+
+The canvas created is available via `App.canvas` which you can add to DOM as you wish. Also check out the DOM to see the canvas that has specified size in the config.
+
+Optionally style the page by adding this to `<head>` section of `index.html`:
+
+`index.html`
+
+```html
+<style>
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+#app {
+  margin: auto;
+  position: relative;
+  width: min(100vw, 100vh * 16/9);
+  aspect-ratio: 16/9;
+}
+
+#app canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+    </style>
+
+```
+
+
+This will center the canvas on the page as it resize, scale it to fill the browser viewport, and keep a 16/9 aspect ratio. So the canvas size we will be working with is specified in the config we passed to `App.run` and different from the actual width and height of the canvas on the page. Finally we set `image-rendering: pixelated` to achieve a pixelated look.
+
+
+## "blah" Sprite Batch renders to the Canvas
+
+`game.ts`
+
+```
+import { Color } from 'blah'
+import { App, batch } from 'blah'
+
+export default class Game {
+  init() {
+  }
+  update() {
+  }
+  render() {
+
+    {
+      App.backbuffer.clear(Color.black)
+
+      batch.render(App.backbuffer)
+      batch.clear()
+    }
+
+  }
+}
+```
+
+
+`App.backbuffer` represents the screen. It's a `Target` that we can render to. `batch` is an object we call methods on to do the rendering. It's a `Sprite Batcher` that batches the render commands and renders at the end. 
+
+So we call `App.backbuffer.clear` with a black color to clear the backbuffer. (That calls gl.clear)
+Render the `App.backbuffer` target with the `batch`. And finally we have to call `batch.clear()` each time we render for maintenance.
+
+See the black canvas rendered on the page.
+
+
 
