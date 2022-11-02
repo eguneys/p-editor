@@ -24,6 +24,11 @@ export default class Game {
 
   render() {
 
+
+
+
+    /* https://github.com/eguneys/p-editor#blah-sprite-batch-renders-to-the-canvas
+    /*
     {
 
       App.backbuffer.clear(Color.black)
@@ -31,6 +36,7 @@ export default class Game {
       batch.render(App.backbuffer)
       batch.clear()
     }
+    */
 
     return
 
