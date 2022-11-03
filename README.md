@@ -20,6 +20,7 @@ The full code can be found at this repository. And a demo of the final version c
 
 ## Specify Game config and append the Canvas to DOM
 
+`main.ts`
 ```js
 import { App } from 'blah'
 import Game from './game'
@@ -154,6 +155,10 @@ import { Target } from 'blah'
     {
       this.buffer.clear(Color.hex(0x150e22))
 
+
+      // here, render into this.buffer
+
+
       batch.render(this.buffer)
       batch.clear()
     }
@@ -188,5 +193,135 @@ import { Target } from 'blah'
 Instead of rendering directly to `App.backbuffer` (which represents the screen), we will render the game into `this.buffer`, which is another `Target` with 320x180 size. Finally we will render the output texture of `this.buffer` (received via `this.buffer.texture(0)`) into our `App.backbuffer` scaled to fill it's size and positioned on the center.
 
 Finally we set the `batch.default_sampler` to use `Nearest` filtering mode to achieve pixelated look.
+
+## Entity Component system, and render a Grid Collider
+
+`game.ts`
+```js
+  {
+    /* ... */
+
+    // here, render into this.buffer
+    let colliders = this.world.all(Collider)
+    colliders.forEach(_ => _.render(batch))
+
+    /* ... */
+  }
+
+```
+
+So we get all components with the type `Collider`, and render them. 
+
+`this.world` is initialized at the top:
+
+`game.ts`
+```js
+  //export default class Game {
+  /* ... */
+      world: World = new World()
+  /* ... */
+```
+
+
+Let's add a collider component in the `load_room` method.
+
+`game.ts`
+```js
+
+  //export default class Game {
+  /* ... */
+      init() {
+        /* ... */
+        this.load_room(Vec2.make(0, 0))
+      }
+  /* ... */
+```
+
+
+`game.ts`
+```js
+  load_room(cell: Vec2) {
+    let offset = Vec2.make(cell.x * this.width, cell.y * this.height)
+
+    let floor = this.world.add_entity(offset)
+    floor.add(Collider.make_grid(8, 40, 23))
+  }
+```
+
+We add an entity to the `this.world`, called `floor`, and add a Grid Collider Component to it. See [EntityComponent.md] for how this Entity Component system works. Now when we query the world for Collider components it will have this component.
+
+
+Import the `Collider` component and actually make that file in `components` folder. Also add the `World` class.
+`game.ts`
+```js
+import { World } from './world'
+import { Collider } from './components/collider'
+```
+
+
+There are different collider types, in this project just two, Grid and Rectangle collider types. We will only fill the Grid collider type now so we can render it. Grid collider is a grid with specified number of `rows` and `columns`, and a `tile_size`.
+
+`components/collider.ts`
+```js
+export class Collider extends Component {
+
+  static make_grid(tile_size: number, columns: number, rows: number) {
+    return new Collider(new Grid(columns, rows, tile_size))
+  }
+
+  constructor(readonly i_collider: Rectangle | Grid) {
+    super()
+  }
+
+  render(batch: Batch) {
+    batch.push_matrix(Mat3x2.create_translation(this.entity.position))
+    this.i_collider.render(batch)
+    batch.pop_matrix()
+  }
+}
+```
+
+We can make a Grid Collider with `make_grid`, the `render` method let the `i_collider` render itself at `this.entity.position`. Which is in this case `Vec2(0, 0)`.
+
+`components/collider.ts`
+```js
+class Rectangle {
+  render(batch: Batch) {
+  }
+}
+
+class Grid {
+
+  cells: Array<boolean>
+
+  constructor(readonly columns: number,
+              readonly rows: number,
+              readonly tile_size: number) {
+                this.cells = []
+              }
+
+  render(batch: Batch) {
+
+    let color = Color.red
+
+    for (let x = 0; x < this.columns; x++) {
+      for (let y = 0; y < this.rows; y++) {
+        if (!this.cells[x + y * this.columns]) {
+          continue
+        }
+        batch.rect_line(
+          Rect.make(x * this.tile_size, y * this.tile_size,
+                    this.tile_size, this.tile_size),
+                    1,
+                    color)
+      }
+    }
+  }
+}
+
+```
+
+`Rectangle` class doesn't render anything. `Grid` class keeps `cells`, array of booleans, which means either the grid is solid or not. The `render` method iterates each row and column `x and y`, and draws lines of the rectangle of the tile at that position. It skips if the `cells` entry at that position is false. Comment that check out to see all grid tiles are rendered. Also play with different `tile_size`, `rows` and `columns` parameters and note that the parameters in `Collider.make_grid(8, 40, 23)` line we added earlier fills the screen exactly.
+
 
 
