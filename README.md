@@ -15,7 +15,7 @@ Currently Noel streams about his side project that is Megaman inspired metroidva
 Finally the internals of the rewrite of "blah" game framework in Typescript will also be discussed in a later post.
 
 
-See [SETUP.md](SETUP.md) for how to setup the Typescript project and install the "blah in Typescript" dependency.
+See [Setup.md](Setup.md) for how to setup the Typescript project and install the "blah in Typescript" dependency.
 The full code can be found at this repository. And a demo of the final version can be found [here]().
 
 ## Specify Game config and append the Canvas to DOM

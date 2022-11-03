@@ -9,7 +9,7 @@ import { World, Entity, Component } from './world'
 
 ```
 
-A Component defines behaviour and game logic. Let's define a Component that logs to the console when renderer:
+A Component defines behaviour and game logic. It has a `render(batch: Batch)` method for rendering. Let's define a Component that logs to the console when rendered:
 
 
 ```js
@@ -18,13 +18,13 @@ class Logger extends Component {
   _prefix!: string
 
   render(batch: Batch) {
-    console.log('Logger', this.entity.position)
+    console.log(this._prefix, this.entity.position)
   }
 
 }
 ```
 
-Component also keeps the entity it belongs to `this.entity`. We log it's position as well. We will use this component later.
+Component also keeps the entity it belongs to, namely `this.entity`. We log it's position as well. We will use this component later.
 
 An Entity has a bunch of components and a position. A World keeps all the entities and their components.
 
@@ -39,8 +39,9 @@ console.log('first render')
 world.render(batch)
 ```
 
+`world.add_entity(position: Vec2): Entity` adds an entity to the world at `position` and returns it.
 
-Note that it log to the console.
+Note that it log to the console because of the Logger Component.
 ```
 first render
 hello {x: 0, y: 0}
