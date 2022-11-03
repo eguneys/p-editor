@@ -3,7 +3,15 @@ import { Batch } from 'blah'
 
 export abstract class Component {
 
+  visible: boolean = true
+  active: boolean = true
+  depth: number = 0
+
   entity!: Entity
+
+  get<T extends Component>(ctor: { new(...args: any[]): T }): T | undefined {
+    return this.entity.get(ctor)
+  }
 
   abstract render(batch: Batch): void
 }
@@ -11,13 +19,21 @@ export abstract class Component {
 
 export class Entity {
 
+  visible: boolean = true
+  active: boolean = true
+ 
   readonly components: Array<Component> = []
 
   constructor(readonly position: Vec2,
               readonly world: World) { }
 
-  add(component: Component) {
-    this.world.add(this, component)
+  get<T extends Component>(ctor: { new(...args: any[]): T }): T | undefined {
+    return this.components.find(_ => _.constructor.name === ctor.name) as T
+  }
+
+
+  add<T extends Component>(component: T) {
+    return this.world.add(this, component)
   }
 }
 
@@ -47,7 +63,12 @@ export class World {
     return this.components.get(ctor.name) ?? []
   }
 
-  add(entity: Entity, component: Component) {
+  first<T extends Component>(ctor: { new(...args: any[]): T }): T | undefined {
+    return this.all(ctor)[0]
+  }
+ 
+
+  add<T extends Component>(entity: Entity, component: T) {
 
     let _ = this.components.get(component.constructor.name)
 
@@ -59,8 +80,23 @@ export class World {
     _.push(component)
 
     component.entity = entity
+    entity.components.push(component)
 
     return component
+  }
+
+
+
+  render(batch: Batch) {
+    let visibles = [...this.components.values()]
+    .flatMap(components => 
+             components
+             .filter(component =>
+                     (component.visible && component.entity.visible)))
+
+    visibles.sort((a, b) => b.depth - a.depth)
+
+    visibles.forEach(_ => _.render(batch))
   }
 
 }

@@ -7,7 +7,54 @@ import { Target } from 'blah'
 import { World } from './world'
 import { Collider } from './components/collider'
 
-new World()
+import { Batch } from 'blah'
+import { Entity, Component } from './world'
+
+
+class Logger extends Component {
+
+  _prefix!: string
+
+  render(batch: Batch) {
+    console.log(this._prefix, this.entity.position)
+  }
+}
+
+let world = new World()
+
+let entity = world.add_entity(Vec2.make(0, 0))
+let logger = entity.add(new Logger())
+logger._prefix = 'hello'
+
+console.log('first render')
+world.render(batch)
+
+
+class Player extends Component { render(batch: Batch) {} }
+class Enemy extends Component { render(batch: Batch) {} }
+
+
+let entity2 = world.add_entity(Vec2.make(0, 0))
+let logger2 = entity2.add(new Logger())
+logger2._prefix = 'logger 2'
+let player = entity2.add(new Player())
+
+
+let entity3 = world.add_entity(Vec2.make(0, 0))
+let logger3 = entity3.add(new Logger())
+logger3._prefix = 'logger 3'
+let enemy = entity3.add(new Enemy())
+
+console.log('second render')
+world.render(batch)
+
+let _player = world.first(Player)
+if (_player) {
+  _player.get(Logger)!._prefix = 'player logger'
+}
+
+console.log('third render')
+world.render(batch)
 
 export default class Game {
 

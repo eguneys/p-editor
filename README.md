@@ -248,16 +248,16 @@ Let's add a collider component in the `load_room` method.
   }
 ```
 
-We add an entity to the `this.world`, called `floor`, and add a Grid Collider Component to it. See [EntityComponent.md] for how this Entity Component system works. Now when we query the world for Collider components it will have this component.
+We add an entity to the `this.world`, called `floor`, and add a Grid Collider Component to it. See [EntityComponent.md](EntityComponent.md) for how this Entity Component system works. Now when we query the world for Collider components it will have this component.
 
 
-Import the `Collider` component and actually make that file in `components` folder. Also add the `World` class.
 `game.ts`
 ```js
 import { World } from './world'
 import { Collider } from './components/collider'
 ```
 
+Import the `Collider` component and actually make that file in `components` folder. Also add the `World` class.
 
 There are different collider types, in this project just two, Grid and Rectangle collider types. We will only fill the Grid collider type now so we can render it. Grid collider is a grid with specified number of `rows` and `columns`, and a `tile_size`.
 
