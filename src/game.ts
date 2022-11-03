@@ -4,6 +4,10 @@ import { Vec2, Mat3x2 } from 'blah'
 import { App, batch } from 'blah'
 import { Target } from 'blah'
 
+import { World } from './world'
+
+new World()
+
 export default class Game {
 
   width = 320
@@ -36,13 +40,14 @@ export default class Game {
       batch.render(App.backbuffer)
       batch.clear()
     }
+    return
     */
 
-    return
 
     {
 
       this.buffer.clear(Color.hex(0x150e22))
+
 
 
       batch.render(this.buffer)
