@@ -42,7 +42,7 @@ class Grid {
     for (let x = 0; x < this.columns; x++) {
       for (let y = 0; y < this.rows; y++) {
         if (!this.cells[x + y * this.columns]) {
-          continue
+          //continue
         }
         batch.rect_line(
           Rect.make(x * this.tile_size, y * this.tile_size,

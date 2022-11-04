@@ -10,7 +10,7 @@ import { Collider } from './components/collider'
 import { Batch } from 'blah'
 import { Entity, Component } from './world'
 
-
+/*
 class Logger extends Component {
 
   _prefix!: string
@@ -56,10 +56,17 @@ if (_player) {
 console.log('third render')
 world.render(batch)
 
+*/
+
 export default class Game {
 
-  width = 320
-  height = 180
+  width = 240
+  height = 135
+
+  tile_width = 8
+  tile_height = 8
+  columns = this.width / this.tile_width
+  rows = this.height / this.tile_height + 1
 
   buffer!: Target
 
@@ -67,10 +74,25 @@ export default class Game {
 
   load_room(cell: Vec2) {
 
+    let grid = Content.find_room(cell)
+
     let offset = Vec2.make(cell.x * this.width, cell.y * this.height)
 
     let floor = this.world.add_entity(offset)
-    floor.add(Collider.make_grid(8, 40, 23))
+    floor.add(Collider.make_grid(8, 30, 17))
+
+
+    for (let x = 0; x < this.columns; x++) {
+      for (let y = 0; y < this.rows; y++) {
+        /*
+        let world_position = offset
+        .add(Vec2.make(x * this.tile_width, y * this.tile_height))
+        .add(Vec2.make(0, 0))
+       */
+        let col = grid.pixels[x + y * this.columns]
+        console.log(col)
+      }
+    }
 
   }
 

@@ -136,8 +136,8 @@ import { Target } from 'blah'
 
 /* export default class Game { */
 
-  width = 320
-  height = 180
+  width = 240
+  height = 135
 
   buffer!: Target
 
@@ -190,7 +190,7 @@ import { Target } from 'blah'
   /* ... */
 ```
 
-Instead of rendering directly to `App.backbuffer` (which represents the screen), we will render the game into `this.buffer`, which is another `Target` with 320x180 size. Finally we will render the output texture of `this.buffer` (received via `this.buffer.texture(0)`) into our `App.backbuffer` scaled to fill it's size and positioned on the center.
+Instead of rendering directly to `App.backbuffer` (which represents the screen), we will render the game into `this.buffer`, which is another `Target` with 240x135 size. Finally we will render the output texture of `this.buffer` (received via `this.buffer.texture(0)`) into our `App.backbuffer` scaled to fill it's size and positioned on the center.
 
 Finally we set the `batch.default_sampler` to use `Nearest` filtering mode to achieve pixelated look.
 
@@ -244,7 +244,7 @@ Let's add a collider component in the `load_room` method.
     let offset = Vec2.make(cell.x * this.width, cell.y * this.height)
 
     let floor = this.world.add_entity(offset)
-    floor.add(Collider.make_grid(8, 40, 23))
+    floor.add(Collider.make_grid(8, 30, 17))
   }
 ```
 
