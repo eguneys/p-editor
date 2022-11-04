@@ -10,7 +10,7 @@ This is a walkthrough of his process in Typescript and WebGL. It uses the rewrit
 
 There is also a [walkthrough of PICO-8 version of Celeste](https://github.com/eguneys/celeste-jumping) written previously.
 
-Currently Noel streams about his side project that is Megaman inspired metroidvania. It features 2D Platforming with slopes, handles collisions with Separating Axis Theorem, layered tiles, smooth room transitions like in Celeste, an awesome level editor, and enemy behaviour described using coroutines. These will be the topic of our next post.
+Currently Noel streams about his side project that is Megaman inspired metroidvania. It features 2D Platforming with slopes, handles collisions with Separating Axis Theorem, layered tiles, smooth room transitions like in Celeste, a level editor, and enemy behaviour described using coroutines. These will be the topic of our next post.
 
 Finally the internals of the rewrite of "blah" game framework in Typescript will also be discussed in a later post.
 
@@ -323,5 +323,7 @@ class Grid {
 
 `Rectangle` class doesn't render anything. `Grid` class keeps `cells`, array of booleans, which means either the grid is solid or not. The `render` method iterates each row and column `x and y`, and draws lines of the rectangle of the tile at that position. It skips if the `cells` entry at that position is false. Comment that check out to see all grid tiles are rendered. Also play with different `tile_size`, `rows` and `columns` parameters and note that the parameters in `Collider.make_grid(8, 40, 23)` line we added earlier fills the screen exactly.
 
+
+## Load room, render tilemaps
 
 

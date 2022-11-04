@@ -10,6 +10,11 @@ import { Collider } from './components/collider'
 import { Batch } from 'blah'
 import { Entity, Component } from './world'
 
+import Content from './content'
+
+import content_map from '../content/map/enum.json'
+console.log(content_map)
+
 /*
 class Logger extends Component {
 
