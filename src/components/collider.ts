@@ -12,6 +12,12 @@ export class Collider extends Component {
     super()
   }
 
+  set_cell(x: number, y: number, value: boolean) {
+    if (this.i_collider instanceof Grid) {
+      this.i_collider.set_cell(x, y, value)
+    }
+  }
+
   render(batch: Batch) {
     batch.push_matrix(Mat3x2.create_translation(this.entity.position))
     this.i_collider.render(batch)
@@ -35,6 +41,10 @@ class Grid {
                 this.cells = []
               }
 
+  set_cell(x: number, y: number, value: boolean) {
+    this.cells[x + y * this.columns] = value
+  }
+
   render(batch: Batch) {
 
     let color = Color.red
@@ -42,7 +52,7 @@ class Grid {
     for (let x = 0; x < this.columns; x++) {
       for (let y = 0; y < this.rows; y++) {
         if (!this.cells[x + y * this.columns]) {
-          //continue
+          continue
         }
         batch.rect_line(
           Rect.make(x * this.tile_size, y * this.tile_size,

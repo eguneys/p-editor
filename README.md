@@ -326,4 +326,48 @@ class Grid {
 
 ## Load room, render tilemaps
 
+Rooms are defined as `.png` images in `content/map` directory, see [Content2.md](Content2.md) on how to load and import the images while the browser reloads as we edit these images. 
+
+
+Rooms have a cell position in the world like, `0x0 1x0 2x0` that defines their x and y coordinates. `Content.find_room(cell: Vec2)` returns a room with the specified cell.
+
+`game.ts`
+```ts
+import Content from './content'
+
+/* ... */
+export default class Game {
+/* ... */
+
+  tile_width = 8
+  tile_height = 8
+  columns = Math.floor(this.width / this.tile_width)
+  rows = Math.floor(this.height / this.tile_height + 1)
+
+  load_room(cell: Vec2) {
+    let grid = Content.find_room(cell)
+    /* ... */
+
+    for (let x = 0; x < this.columns; x++) {
+      for (let y = 0; y < this.rows; y++) {
+        let col = grid.pixels[x + y * this.columns]
+
+        switch (col.rgb) {
+          case 0x000000:
+            break;
+          case 0xfff1e8:
+            solids.set_cell(x, y, true)
+          break
+        }
+      }
+    }
+  }
+  
+```
+
+`grid.pixels` is an `Array<Color>` that defined the tiles of the room. We enumerate all the rows and columns and check against their color to place tiles and objects. For now `0x000000` just skips and `0xfff1e8` sets the tile as solid.
+
+Add a `0x0.png` file in `content/map` directory with the size of `30x17`, and color some pixels with the color `0xfff1e8`, see the result on the browser as the tiles become solid and drawn by the Collider component.
+
+
 

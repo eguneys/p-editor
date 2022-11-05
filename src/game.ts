@@ -12,9 +12,6 @@ import { Entity, Component } from './world'
 
 import Content from './content'
 
-import content_map from '../content/map/enum.json'
-console.log(content_map)
-
 /*
 class Logger extends Component {
 
@@ -70,8 +67,8 @@ export default class Game {
 
   tile_width = 8
   tile_height = 8
-  columns = this.width / this.tile_width
-  rows = this.height / this.tile_height + 1
+  columns = Math.floor(this.width / this.tile_width)
+  rows = Math.floor(this.height / this.tile_height + 1)
 
   buffer!: Target
 
@@ -84,18 +81,21 @@ export default class Game {
     let offset = Vec2.make(cell.x * this.width, cell.y * this.height)
 
     let floor = this.world.add_entity(offset)
-    floor.add(Collider.make_grid(8, 30, 17))
-
+    let solids = floor.add(Collider.make_grid(8, 30, 17))
 
     for (let x = 0; x < this.columns; x++) {
       for (let y = 0; y < this.rows; y++) {
-        /*
-        let world_position = offset
-        .add(Vec2.make(x * this.tile_width, y * this.tile_height))
-        .add(Vec2.make(0, 0))
-       */
         let col = grid.pixels[x + y * this.columns]
-        console.log(col)
+
+        switch (col.rgb) {
+          case 0x000000:
+            break;
+          case 0xfff1e8:
+            solids.set_cell(x, y, true)
+          break
+        }
+
+
       }
     }
 
