@@ -367,6 +367,33 @@ export default class Game {
 
 `grid.pixels` is an `Array<Color>` that defined the tiles of the room. We enumerate all the rows and columns and check against their color to place tiles and objects. For now `0x000000` just skips and `0xfff1e8` sets the tile as solid.
 
+`solids.set_cell` sets the tile as solid. As defined in the Collider component:
+
+`components/collider.ts`
+```ts
+
+/* ... */
+export class Collider extends Component {
+/* ... */
+
+  set_cell(x: number, y: number, value: boolean) {
+    if (this.i_collider instanceof Grid) {
+      this.i_collider.set_cell(x, y, value)
+    }
+  }
+
+}
+
+/* ... */
+class Grid {
+  /* ... */
+  set_cell(x: number, y: number, value: boolean) {
+    this.cells[x + y * this.columns] = value
+  }
+ /* ... */
+
+```
+
 Add a `0x0.png` file in `content/map` directory with the size of `30x17`, and color some pixels with the color `0xfff1e8`, see the result on the browser as the tiles become solid and drawn by the Collider component.
 
 
