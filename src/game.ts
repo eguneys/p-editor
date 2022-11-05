@@ -6,6 +6,7 @@ import { Target } from 'blah'
 
 import { World } from './world'
 import { Collider } from './components/collider'
+import { Tilemap  } from './components/tilemap'
 
 import { Batch } from 'blah'
 import { Entity, Component } from './world'
@@ -62,6 +63,11 @@ world.render(batch)
 
 export default class Game {
 
+
+  static rand_int = (min: number, max: number) => {
+    return min + Math.floor(Math.random() * (max - min))
+  }
+
   width = 240
   height = 135
 
@@ -80,8 +86,12 @@ export default class Game {
 
     let offset = Vec2.make(cell.x * this.width, cell.y * this.height)
 
+    let castle = Content.find_tileset('castle')
+
     let floor = this.world.add_entity(offset)
     let solids = floor.add(Collider.make_grid(8, 30, 17))
+
+    let tilemap = floor.add(Tilemap.make(8, 8, this.columns, this.rows))
 
     for (let x = 0; x < this.columns; x++) {
       for (let y = 0; y < this.rows; y++) {
@@ -92,6 +102,7 @@ export default class Game {
             break;
           case 0xfff1e8:
             solids.set_cell(x, y, true)
+            tilemap.set_cell(x, y, castle.random_tile)
           break
         }
 

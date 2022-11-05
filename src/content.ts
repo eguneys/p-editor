@@ -2,6 +2,8 @@ import { Vec2, Image as BImage } from 'blah'
 /* https://vitejs.dev/guide/features.html#glob-import-as */
 const content_map = import.meta.glob('../content/map/*.png', { import: 'default' })
 
+import { Tileset } from './assets/tileset'
+
 function load_image(path: string): Promise<HTMLImageElement> {
   return new Promise(resolve => {
     let res = new Image()
@@ -44,11 +46,18 @@ class Content {
   }
 
 
-  constructor(readonly rooms: Array<RoomInfo>) {
+  constructor(
+    readonly rooms: Array<RoomInfo>,
+    readonly tilesets: Array<Tileset>) {
   }
 
   find_room(cell: Vec2) {
     return this.rooms.find(_ => _.cell.equals(cell))!.image
+  }
+
+
+  find_tileset(name: string) {
+    return this.tilesets.find(_ => _.name === name)!
   }
 }
 
