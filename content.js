@@ -1,6 +1,6 @@
 import fs from 'fs'
 import chokidar from 'chokidar'
-import aset from 'aset'
+import pack from './_pack.js'
 
 const enum_content_map = () => {
   fs.readdir('./content/map', (err, files) => {
@@ -14,7 +14,11 @@ const enum_content_map = () => {
 }
 
 const ase_content_tiles = () => {
-  aset(['./content/tilesets'], './content/out')
+  try {
+  pack()
+  } catch(e) {
+    console.warn('failed to pack.')
+  }
 }
 
 
@@ -26,4 +30,4 @@ chokidar.watch('./content/map/*.png', { ignoreInitial: true })
 chokidar.watch('./content/tilesets/*.ase', { ignoreInitial: true })
   .on('all', (event, path) => ase_content_tiles())
 
-enum_content_map()
+ase_content_tiles()

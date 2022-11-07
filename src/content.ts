@@ -18,13 +18,6 @@ function load_image(path: string): Promise<HTMLImageElement> {
   })
 }
 
-export type AsetFrameInfo = {
-  name: string,
-  packeds: Array<number>,
-  frame: Array<number>,
-  slices: Array<{}>
-}
-
 
 export type RoomInfo = {
   image: BImage,
@@ -61,28 +54,18 @@ class Content {
 
 
 
-    let tilesets = content_page0_json.filter(_ => _.folder === './content/tilesets')
-    .map((_: AsetFrameInfo) => {
+    let tilesets = content_page0_json.tilesets.map(_ => {
       
-      let tiles: Array<Subtexture> = []
-
       let name = _.name
 
+      let tiles = _.packs.map(_ => {
+        let framerect = Rect.make(_.frame.x, _.frame.y, _.frame.w, _.frame.h)
 
-      let [px, py, pw, ph] = _.packeds
+        let subrect = Rect.make(_.packed.x, _.packed.y, _.packed.w, _.packed.h)
 
-      let columns = pw / Game.tile_width
-      let rows = ph / Game.tile_height
 
-      for (let x = 0; x < columns; x++) {
-        for (let y = 0; y < rows; y++) {
-          let subrect = Rect.make(px + x * Game.tile_width, py + y * Game.tile_height, Game.tile_width, Game.tile_height)
-
-          let subtex = Subtexture.make(texture, subrect)
-
-          tiles.push(subtex)
-        }
-      }
+        return Subtexture.make(texture, subrect, framerect)
+      })
 
       return new Tileset(name,
                          tiles)
