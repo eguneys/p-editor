@@ -87,6 +87,8 @@ export default class Game {
     let offset = Vec2.make(cell.x * Game.width, cell.y * Game.height)
 
     let castle = Content.find_tileset('castle')
+    let grass = Content.find_tileset('grass')
+    let plants = Content.find_tileset('plants')
 
     let floor = this.world.add_entity(offset)
     let solids = floor.add(Collider.make_grid(8, 30, 17))
@@ -101,9 +103,16 @@ export default class Game {
           case 0x000000:
             break;
           case 0xfff1e8:
-            solids.set_cell(x, y, true)
             tilemap.set_cell(x, y, castle.random_tile)
+            solids.set_cell(x, y, true)
           break
+          case 0x00e436:
+            tilemap.set_cell(x, y, grass.random_tile)
+            solids.set_cell(x, y, true)
+            break
+          case 0x008751:
+            tilemap.set_cell(x, y, plants.random_tile)
+            break
         }
 
 
