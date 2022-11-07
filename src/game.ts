@@ -68,13 +68,13 @@ export default class Game {
     return min + Math.floor(Math.random() * (max - min))
   }
 
-  width = 240
-  height = 135
+  static width = 240
+  static height = 135
 
-  tile_width = 8
-  tile_height = 8
-  columns = Math.floor(this.width / this.tile_width)
-  rows = Math.floor(this.height / this.tile_height + 1)
+  static tile_width = 8
+  static tile_height = 8
+  static columns = Math.floor(Game.width / Game.tile_width)
+  static rows = Math.floor(Game.height / Game.tile_height + 1)
 
   buffer!: Target
 
@@ -84,18 +84,18 @@ export default class Game {
 
     let grid = Content.find_room(cell)
 
-    let offset = Vec2.make(cell.x * this.width, cell.y * this.height)
+    let offset = Vec2.make(cell.x * Game.width, cell.y * Game.height)
 
     let castle = Content.find_tileset('castle')
 
     let floor = this.world.add_entity(offset)
     let solids = floor.add(Collider.make_grid(8, 30, 17))
 
-    let tilemap = floor.add(Tilemap.make(8, 8, this.columns, this.rows))
+    let tilemap = floor.add(Tilemap.make(8, 8, Game.columns, Game.rows))
 
-    for (let x = 0; x < this.columns; x++) {
-      for (let y = 0; y < this.rows; y++) {
-        let col = grid.pixels[x + y * this.columns]
+    for (let x = 0; x < Game.columns; x++) {
+      for (let y = 0; y < Game.rows; y++) {
+        let col = grid.pixels[x + y * Game.columns]
 
         switch (col.rgb) {
           case 0x000000:
@@ -114,12 +114,14 @@ export default class Game {
 
   init() {
 
-    this.buffer = Target.create(this.width, this.height)
+    this.buffer = Target.create(Game.width, Game.height)
 
     batch.default_sampler = TextureSampler.make(TextureFilter.Nearest)
 
 
-    this.load_room(Vec2.make(0, 0))
+    Content.load().then(() => {
+      this.load_room(Vec2.make(0, 0))
+    })
   }
 
   update() {
@@ -147,6 +149,7 @@ export default class Game {
 
       this.buffer.clear(Color.hex(0x150e22))
 
+      this.world.render(batch)
 
       let colliders = this.world.all(Collider)
       colliders.forEach(_ => _.render(batch))
