@@ -7,6 +7,7 @@ import { Target } from 'blah'
 import { World } from './world'
 import { Collider } from './components/collider'
 import { Tilemap  } from './components/tilemap'
+import { Player } from './components/player'
 
 import { Batch } from 'blah'
 import { Entity, Component } from './world'
@@ -86,9 +87,11 @@ export default class Game {
 
     let offset = Vec2.make(cell.x * Game.width, cell.y * Game.height)
 
+
     let castle = Content.find_tileset('castle')
     let grass = Content.find_tileset('grass')
     let plants = Content.find_tileset('plants')
+    let backs = Content.find_tileset('backs')
 
     let floor = this.world.add_entity(offset)
     let solids = floor.add(Collider.make_grid(8, 30, 17))
@@ -97,6 +100,11 @@ export default class Game {
 
     for (let x = 0; x < Game.columns; x++) {
       for (let y = 0; y < Game.rows; y++) {
+
+        let world_position = offset
+        .add(Vec2.make(x * Game.tile_width, y * Game.tile_height))
+        .add(Vec2.make(Game.tile_width / 2, Game.tile_height))
+
         let col = grid.pixels[x + y * Game.columns]
 
         switch (col.rgb) {
@@ -112,6 +120,16 @@ export default class Game {
             break
           case 0x008751:
             tilemap.set_cell(x, y, plants.random_tile)
+            break
+          case 0xff9d81:
+
+            tilemap.set_cell(x, y, backs.random_tile)
+            break
+          case 0x29adff: {
+            if (!this.world.first(Player)) {
+              Player.make(this.world, world_position.add(Vec2.make(0, -16)))
+            }
+          }
             break
         }
 

@@ -5,6 +5,7 @@ import { Texture, Subtexture } from 'blah'
 const content_map = import.meta.glob('../content/map/*.png', { import: 'default' })
 
 import { Tileset } from './assets/tileset'
+import { Sprite } from './assets/sprite'
 
 import content_page0 from '../content/out_0.png'
 import content_page0_json from '../content/out_0.json'
@@ -73,11 +74,13 @@ class Content {
 
     this.rooms = rooms
     this.tilesets = tilesets
+    this.sprites = []
   }
 
 
   rooms!: Array<RoomInfo>
   tilesets!: Array<Tileset>
+  sprites!: Array<Sprite>
 
 
   find_room(cell: Vec2) {
@@ -87,6 +90,10 @@ class Content {
 
   find_tileset(name: string) {
     return this.tilesets.find(_ => _.name === name)!
+  }
+
+  find_sprite(name: string) {
+    return this.sprites.find(_ => _.name === name)!
   }
 }
 

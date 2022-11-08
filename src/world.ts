@@ -13,7 +13,7 @@ export abstract class Component {
     return this.entity.get(ctor)
   }
 
-  abstract render(batch: Batch): void
+  render(batch: Batch) {}
 }
 
 

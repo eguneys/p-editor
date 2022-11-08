@@ -5,7 +5,8 @@ export default async function pack() {
 
   let packer = new Packer()
 
-  let tilesets = []
+  let tilesets = [],
+    sprites = []
 
   await ase_files('./content/tilesets')
     .then(_ => _.map(({name, ase}) => {
@@ -30,6 +31,17 @@ export default async function pack() {
     }))
 
 
+  await ase_files('./content/sprites')
+  .then(_ => _.map(({name, ase}) => {
+
+    let packs = ase.frames.map(frame => packer.add(frame.image))
+
+    sprites.push({ name, packs })
+  }))
+
+
+
+
   packer.pack()
 
 
@@ -37,6 +49,13 @@ export default async function pack() {
     name,
     packs: packs.map(_ => ({ frame: _.frame, packed: _.packed }))
   }))
+
+  sprites = sprites.map(({ name, packs }) => ({
+    name,
+    packs: packs.map(_ => ({ frame: _.frame, packed: _.packed }))
+  }))
+
+
 
   let res = {
     tilesets

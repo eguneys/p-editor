@@ -14,11 +14,9 @@ const enum_content_map = () => {
 }
 
 const ase_content_tiles = () => {
-  try {
-  pack()
-  } catch(e) {
+  pack().catch(e => {
     console.warn('failed to pack.')
-  }
+  })
 }
 
 
@@ -27,7 +25,9 @@ chokidar.watch('./content/map/*.png', { ignoreInitial: true })
   .on('all', (event, path) => enum_content_map())
 */
 
-chokidar.watch('./content/tilesets/*.ase', { ignoreInitial: true })
+chokidar.watch(['./content/tilesets/*.ase',
+  './content/sprites/*.ase'
+], { ignoreInitial: true })
   .on('all', (event, path) => ase_content_tiles())
 
 ase_content_tiles()
